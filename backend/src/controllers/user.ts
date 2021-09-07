@@ -11,10 +11,6 @@ import upload from '../services/imageUpload';
 import imageDelete from '../services/imageDelete';
 import config from '../config/config';
 
-interface MulterRequest extends Request {
-    file: any;
-}
-
 const NAMESPACE = 'User Controller'
 const vitEmailRegex = /^([A-Za-z]+\.[A-za-z]+[0-9]{4,4}@vitstudent.ac.in)/gm;
 
