@@ -30,6 +30,8 @@ const saveMessage = async(req: Request, res: Response, next: NextFunction) =>{
   
       try {
           const savedMessage = await newMessage.save();
+          conversation.hasMessages = true;
+          conversation.save();
           return res.status(200).json(savedMessage);
       } catch (err) {
           return res.status(500).json(err);

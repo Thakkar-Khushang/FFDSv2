@@ -32,8 +32,10 @@ router.get('/passwordReset', controller.passwordReset);
 
 router.put('/update',auth,controller.updateUser);
 
-router.put('/reject/:userId',auth,controller.rejectMatch);
+router.get('/reject/:userId',auth,controller.rejectMatch);
 
 router.post('/image',auth, controller.imageUpload);
+
+// router.post('/image/delete',auth');
 
 export = router;

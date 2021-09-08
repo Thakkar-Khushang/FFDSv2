@@ -51,6 +51,7 @@ const createNewConversation = async(req: Request, res: Response, next: NextFunct
 
     const newConversation = new Conversation({
         members: [selfUserId, req.body.userId],
+        matched: true
       });
     
       try {
@@ -64,12 +65,14 @@ const createNewConversation = async(req: Request, res: Response, next: NextFunct
 const getConversationOfUser = async(req: Request, res: Response, next: NextFunction) =>{
   logging.info(NAMESPACE,"Getting all Conversations of a user");
   let userId = res.locals.jwt.id;
-  let matchedOnly = [];
+  console.log(userId)
+  let matchedOnly = []; 
   let hasMessages = [];
   try {
     const conversations = await Conversation.find({
       "members": { $in: [userId] }, "matched": true
     });
+    console.log(conversations)
     matchedOnly = conversations.filter((conversation:any) => !conversation.hasMessages && !conversation.blocked);
     hasMessages = conversations.filter((conversation:any) => conversation.hasMessages);
     return res.status(200).json({
@@ -128,7 +131,9 @@ const block = async(req: Request, res: Response, next:NextFunction) =>{
         "message":"Conversation not found"
       })
     }
-    if(!conversation.matched) return res.status(400).send({err:true, message:"Users not Matched"})
+    if(!conversation.matched){
+      return res.status(400).send({err:true, message:"Users not Matched"})
+    }
     if(selfUser===null || selfUser===undefined){
       return res.status(404).send({
         "err":true,
@@ -141,6 +146,10 @@ const block = async(req: Request, res: Response, next:NextFunction) =>{
       selfUser.blocked.push(req.params.userId);
       conversation.save();
       selfUser.save();
+      return res.status(200).send({
+        "err":true,
+        "message":"User Blocked"
+      })
     }
   } catch (err) {
     return res.status(500).json(err);
