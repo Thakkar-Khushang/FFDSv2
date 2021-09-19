@@ -147,7 +147,6 @@ const block = async(req: Request, res: Response, next:NextFunction) =>{
       conversation.save();
       selfUser.save();
       return res.status(200).send({
-        "err":true,
         "message":"User Blocked"
       })
     }
