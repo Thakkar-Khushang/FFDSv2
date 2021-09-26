@@ -35,6 +35,9 @@ const getFeed = async(req: Request, res: Response, next: NextFunction) =>{
                 "error": err
             })
         })
+        if(user.slot.length===0){
+            return res.status(400).send({err:true,message:"User slots not set, Please try again after setting the slots"})
+        }
         let feed = [];
         if(user.genderPreference!=="none"){
             feed = await User.find({"_id":{ $nin: user.rejected.concat(user.accepted).concat(user.blocked).concat([id]) }, "gender": user.genderPreference, "verified":true}).select("-password")
