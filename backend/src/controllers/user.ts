@@ -36,7 +36,7 @@ const getFeed = async(req: Request, res: Response, next: NextFunction) =>{
             })
         })
         if(user.slot.length===0){
-            return res.status(400).send({err:true,message:"User slots not set, Please try again after setting the slots"})
+            return res.status(400).send({"message":"User TimeTable is Not Uploaded"})
         }
         let feed = [];
         if(user.genderPreference!=="none"){
@@ -44,14 +44,12 @@ const getFeed = async(req: Request, res: Response, next: NextFunction) =>{
         }else{
             feed = await User.find({"_id":{ $nin: user.rejected.concat(user.accepted).concat(user.blocked).concat([id]) }, "verified":true}).select("-password")
         }
-        if(!feed || feed === []){
+        console.log("checkpoint 1")
+        if(!feed || feed.length === 0){
             return res.status(404).send({"message":"No Matches Found"});
         }
-        if(user.slot === []){
-            return res.status(400).send({"message":"User TimeTable is Not Uploaded"});
-        }
         feed.forEach((match:any) => {
-            if(match.slot !== []){
+            if(match.slot.length !== 0){
                 let commonSlotLength = 0;
                 let tempUser = match._doc;
                 for(let i=0; i<7; i++) {
@@ -74,7 +72,7 @@ const getFeed = async(req: Request, res: Response, next: NextFunction) =>{
             return 0;
           });
         
-        if(final === []){
+        if(final.length === 0){
             return res.status(404).send({"message":"No Matches Found"});
         }
 
