@@ -270,7 +270,7 @@ const updatePassword =  async(req: Request, res: Response, next: NextFunction) =
                 "error": hashError
             });
         }
-        let user = await User.findOneAndUpdate(id,{password: hash});
+        let user = await User.findOneAndUpdate({"_id":id},{password: hash});
         if(user===null || user===undefined){
             return res.status(404).json({err:true,message:"User not found"})
         }
